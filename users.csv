@@ -1,0 +1,46 @@
+FirstName,LastName,SamAccountName,Title,Manager
+SharePoint,Install Account,sp_install,Service Account,
+SharePoint,Farm Account,sp_farm,Service Account,
+SharePoint,Web App Account,sp_webapps,Service Account,
+SharePoint,Service App Account,sp_serviceapps,Service Account,
+SharePoint,Profile Account,sp_profile,Service Account,
+SharePoint,Search Content Crawl,sp_content,Service Account,
+SharePoint,Super User,sp_superuser,Service Account,
+SharePoint,Super Reader,sp_superreader,Service Account,
+SharePoint,Workflow,sp_workflow,Service Account,
+SharePoint,Office Web Apps,sp_owa,Service Account,
+SQL,Install Account,sqlinstall,Service Account,
+SQL,Service Account,sqluser,Service Account,
+Bret,Piatt,bret,Head Honcho,
+Jeff,Deverter,jeff,Head Honcho,bret
+Nicola,Young,nicola,Sales lead,jeff
+Shane,Young,shane,Who knows,jeff
+Todd,Klindt,todd,SharePoint Consultant,jeff
+John,Ross,john,SharePoint Consultant,shane
+Randy,Drisgill,randy,Branding guy,nicola
+Laura,Rogers,laura,Telemetry Boss,nicola
+Chris,Caravjal,chris,SharePoint Consultant,nicola
+Ryan,Keller,ryan,SharePoint Consultant,randy
+Tyson,Young,tyson,,shane
+Pugsly,Young,pugsly,Janitor,tyson
+Grant,Young,grant,,nicola
+Luke,Young,luke,,nicola
+Jill,Klindt,jill,,todd
+Lily,Klindt,lily,,todd
+Penny,Klindt,penny,,todd
+Owen,Klindt,Owen,,todd
+Ben,Ross,ben,,john
+Julia,Ross,julia,,john
+Vanessa,Ross,vanessa,,john
+Jackie,Drisgill,jackie,,randy
+Chris,Rogers,chrisr,,laura
+Kristin,Rogers,kristin,,laura
+Charlotte,Rogers,charlotte,,laura
+Frito,Drisgill,frito,Cat,jackie
+Brittany,Keller,brittany,,ryan
+Colby,Keller,colby,Dog,ryan
+Daphne,Keller,daphne,Dog,ryan
+Phil,Jirsa,phil,SharePoint Consultant,nicola
+Javier,Barrera,javi,SharePoint Engineer,randy
+Brett,Woodall,brett,Stinky Programmer,randy
+Jeff,Taylor,scuba,Who Knows,todd
