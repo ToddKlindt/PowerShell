@@ -2,7 +2,7 @@
 # v2.1 2/25/2019
 # Todd Klindt
 # http://www.toddklindt.com
-
+# Blog post, Yay!!!
 # Add the Active Directory bits and not complain if they're already there
 Import-Module ActiveDirectory -ErrorAction SilentlyContinue
 
