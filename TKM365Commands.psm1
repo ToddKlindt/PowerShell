@@ -3,7 +3,7 @@ function Get-TKPnPGraphURI {
     .Synopsis
        Get information from the Graph API
     .DESCRIPTION
-       Get information from the Graph API. This function requires the PnP.PowerShell module be installed and you are already connected with Connect-PnPOnline. Find Graph endpoints with the Graph Explorer at https://developer.microsoft.com/en-us/graph/graph-explorer From a blog post at https://www.toddklindt.com/blog
+       Get information from the Graph API. This function requires the PnP.PowerShell module be installed and you are already connected with Connect-PnPOnline. Find Graph endpoints with the Graph Explorer at https://developer.microsoft.com/en-us/graph/graph-explorer From a blog post at https://www.toddklindt.com/blog Code based on the sample at https://pnp.github.io/script-samples/graph-call-graph/README.html 
        v1.0 - 4/15/22
     .EXAMPLE
        Get-TKPnPGraphURI -uri https://graph.microsoft.com/v1.0/me/
@@ -12,10 +12,11 @@ function Get-TKPnPGraphURI {
     #>    
         [CmdletBinding()]
         param (
-            # URI of the Graph API Endpoint. Something like https://graph.microsoft.com/v1.0/me/
-            [Parameter(Mandatory=$true)]
+            [Parameter(Mandatory=$true,HelpMessage = "URI of the Graph API Endpoint, e.g. https://graph.microsoft.com/v1.0/me/")]
+            [ValidateNotNullOrEmpty()]
+            [ValidatePattern("^http")]
             [uri]$uri
-        )
+            )
         
         begin {
             try {
@@ -39,9 +40,6 @@ function Get-TKPnPGraphURI {
         }
         
         process {
-            if([string]::IsNullOrWhiteSpace($uri)) {
-                throw "No URI was passed"
-            }
             try {
                 Write-Verbose "Getting Me..."
                 $me = Invoke-RestMethod -Uri $uri -Headers @{"Authorization"="Bearer $($token)"} -Method Get -ContentType "application/json"
