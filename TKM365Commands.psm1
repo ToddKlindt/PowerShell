@@ -61,3 +61,40 @@ function Get-TKPnPGraphURI {
             
         }
     }
+
+    function Get-TKPnPCurrentUser {
+        [CmdletBinding()]
+        param (
+            
+        )
+        
+        begin {
+            
+        }
+        
+        process {
+            try {
+                $ctx = Get-PnPContext -ErrorAction Stop
+            }
+            catch {
+                $_
+                return
+            }
+            
+            $ctx.Load($ctx.Web.CurrentUser)
+            $ctx.ExecuteQuery()
+            $CurrentUser = $ctx.Web.CurrentUser
+    
+            [PSCustomObject]@{
+                PSTypeName  = 'TKPnPCurrentUser'
+                ID = $CurrentUser.Id
+                Title = $CurrentUser.Title
+                LoginName = $CurrentUser.LoginName
+                Email = $CurrentUser.Email
+            }
+        }
+        
+        end {
+            
+        }
+    }
