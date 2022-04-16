@@ -65,7 +65,10 @@ function Get-TKPnPGraphURI {
     function Get-TKPnPCurrentUser {
         [CmdletBinding()]
         param (
-            
+            [Parameter(HelpMessage = "Use the Graph API Endpoint https://graph.microsoft.com/v1.0/me/ to get the Current User's information instead of the SharePoint context")]
+            [switch]$UseGraph,
+            [Parameter(HelpMessage = "Use the Beat /beta/ Graph Endpoint instead of the /v1.0/ Endpoint. Used with -UseGraph parameter")]
+            [switch]$UseBetaEndpoint
         )
         
         begin {
@@ -73,25 +76,39 @@ function Get-TKPnPGraphURI {
         }
         
         process {
-            try {
-                $ctx = Get-PnPContext -ErrorAction Stop
+            if ($UseGraph) {
+                Write-Verbose "Using Graph endpoint"
+                if ($UseBetaEndPoint) {
+                    Write-Verbose "Using Beta Endpoit"
+                    Get-TKPnPGraphURI -uri https://graph.microsoft.com/beta/me/
+                } else {
+                    Write-Verbose "Using v1.0 Endpoit"
+                    Get-TKPnPGraphURI -uri https://graph.microsoft.com/v1.0/me/
+                }
+                
+            } else {
+                Write-Verbose "Using SharePoint Context"
+                try {
+                    $ctx = Get-PnPContext -ErrorAction Stop
+                }
+                catch {
+                    $_
+                    return
+                }
+                
+                $ctx.Load($ctx.Web.CurrentUser)
+                $ctx.ExecuteQuery()
+                $CurrentUser = $ctx.Web.CurrentUser
+        
+                [PSCustomObject]@{
+                    PSTypeName  = 'TKPnPCurrentUser'
+                    ID = $CurrentUser.Id
+                    Title = $CurrentUser.Title
+                    LoginName = $CurrentUser.LoginName
+                    Email = $CurrentUser.Email
+                }
             }
-            catch {
-                $_
-                return
-            }
-            
-            $ctx.Load($ctx.Web.CurrentUser)
-            $ctx.ExecuteQuery()
-            $CurrentUser = $ctx.Web.CurrentUser
-    
-            [PSCustomObject]@{
-                PSTypeName  = 'TKPnPCurrentUser'
-                ID = $CurrentUser.Id
-                Title = $CurrentUser.Title
-                LoginName = $CurrentUser.LoginName
-                Email = $CurrentUser.Email
-            }
+
         }
         
         end {
