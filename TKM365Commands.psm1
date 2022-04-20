@@ -15,7 +15,8 @@ function Get-TKPnPGraphURI {
             [Parameter(Mandatory=$true,HelpMessage = "URI of the Graph API Endpoint, e.g. https://graph.microsoft.com/v1.0/me/")]
             [ValidateNotNullOrEmpty()]
             [ValidatePattern("^http")]
-            [uri]$uri
+            [uri]$uri,
+            [ValidateSet("BoundedStaleness", "ConsistentPrefix", "Eventual","Session","Strong")]$ConsistencyLevel
             )
         
         begin {
@@ -36,13 +37,30 @@ function Get-TKPnPGraphURI {
                 $_
                 throw "Was unable to get a Graph Access Token"
             }
-    
+            # Terms that require ConsistencyLevel = eventual
+            $TermsList = @('$count','$search')
         }
         
         process {
             try {
                 Write-Verbose "Getting Me..."
-                $me = Invoke-RestMethod -Uri $uri -Headers @{"Authorization"="Bearer $($token)"} -Method Get -ContentType "application/json"
+                $headers = @{"Authorization"="Bearer $($token)"}
+
+                if ($ConsistencyLevel) {
+                    Write-Verbose "Setting ConsistencyLevel to $ConsistencyLevel"
+                    $headers = @{'ConsistencyLevel' = $ConsistencyLevel;"Authorization"="Bearer $($token)"}
+                } else {
+                foreach ($term in $TermsList) {
+                    Write-Verbose $term 
+                    if ($uri -like "*$($term)*") {
+                        Write-Verbose "Found term $($term) in URI. Adding ConsistencyLevel to Header"
+                        $headers = @{'ConsistencyLevel' = "eventual";"Authorization"="Bearer $($token)"}
+                    }
+                    
+                }
+            }
+
+                $me = Invoke-RestMethod -Uri $uri -Headers $headers -Method Get -ContentType "application/json"
             }
             catch {
                 $_
