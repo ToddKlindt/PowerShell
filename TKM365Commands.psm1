@@ -9,6 +9,9 @@ function Get-TKPnPGraphURI {
        Get-TKPnPGraphURI -uri https://graph.microsoft.com/v1.0/me/
     .EXAMPLE
        Get-TKPnPGraphURI -uri https://graph.microsoft.com/beta/me/transitiveMemberOf/microsoft.graph.group?$count=true | select displayName, visibility
+    .EXAMPLE
+        Get-TKPnPGraphURI -uri https://graph.microsoft.com/beta/users/$count
+        The command will automatically set ConsistencyLevel = Eventual in the headers if it sees $count or $search in the URI. Alternately you can use the -ConsistencyLevel parameter to set it manually.
     #>    
         [CmdletBinding()]
         param (
@@ -44,12 +47,15 @@ function Get-TKPnPGraphURI {
         process {
             try {
                 Write-Verbose "Getting Me..."
+                # Set the default headers
                 $headers = @{"Authorization"="Bearer $($token)"}
 
                 if ($ConsistencyLevel) {
+                    # If the user passed a ConsistencyLevel parameter, use that
                     Write-Verbose "Setting ConsistencyLevel to $ConsistencyLevel"
                     $headers = @{'ConsistencyLevel' = $ConsistencyLevel;"Authorization"="Bearer $($token)"}
                 } else {
+                    # If not, see if we see one in the URI
                 foreach ($term in $TermsList) {
                     Write-Verbose $term 
                     if ($uri -like "*$($term)*") {
@@ -68,10 +74,10 @@ function Get-TKPnPGraphURI {
             }
     
             if($null -eq $me.value) {
-                Write-Verbose "No Value"
+                Write-Verbose "Collection Returned"
                 $me
             } else {
-                Write-Verbose "Value"
+                Write-Verbose "Single Object returned"
                 $($me.value)
             }
         }  
