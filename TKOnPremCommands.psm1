@@ -7,7 +7,7 @@ function Get-TKSPServiceAccount {
     .Synopsis
        Gets all the accounts used for services by on-prem SharePoint Server.
     .DESCRIPTION
-       Gets all the accounts used for services by on-prem SharePoint Server. Must be run on a SharePoint server by a local admin in an admin PowerShell window.
+       Gets all the accounts used for services by on-prem SharePoint Server. Must be run on a SharePoint server by a local admin in an admin PowerShell window. Most of the functional code came from https://info.summit7.us/blog/retrieve-all-sharepoint-service-accounts-with-powershell. I prettied it up some, but all the props go to Michael Wilke. 
     .EXAMPLE
         Get-TKSPServiceAccount
     .EXAMPLE
