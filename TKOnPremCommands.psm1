@@ -1,4 +1,6 @@
 # Some on-prem goodies.
+# Originally published at https://github.com/ToddKlindt/PowerShell
+# Also check out https://www.toddklindt.com
 
 function Get-TKSPServiceAccount {
     <#
