@@ -20,7 +20,7 @@ function Get-TKSPServiceAccount {
     Gets all of the service accounts in the farm. It outputs the results into a CSV file called output.csv in the current directory.
 
     .EXAMPLE
-        Get-TKSPServiceAccount | ConvertTo-Csv | Tee-Object -File .\output.csv | ConvertFrom-Csv
+        Get-TKSPServiceAccount | ConvertTo-Csv -NoTypeInformation | Tee-Object -File .\output.csv | ConvertFrom-Csv
 
     Gets all of the service accounts in the farm. It outputs the results into a CSV file called output.csv in the current directory and displays it on the screen at the same time.
 
