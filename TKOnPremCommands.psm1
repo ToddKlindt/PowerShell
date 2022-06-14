@@ -154,7 +154,7 @@ function Get-TKSPServiceAccount {
         }
         
         #Get Object Cache accounts
-        Write-Verbose " Getting SharePoint Object Cache Accounts"
+        Write-Verbose "Getting SharePoint Object Cache Accounts"
         $temp = Get-SPWebApplication | ForEach-Object { $_.Properties["portalsuperuseraccount"] }
         if (-not [string]::IsNullOrWhiteSpace($temp)) {
             foreach ($item in $temp) {
@@ -242,6 +242,7 @@ function Get-TKSPServiceAccount {
         }
         
         try {
+            [void](Get-Command -name Get-SPPerformancePointServiceApplication -ErrorAction Stop)
             if (Get-SPPerformancePointServiceApplication) {
                 $PerformancePoint = (Get-SPPerformancePointSecureDataValues -ServiceApplication $svcApp.Id).DataSourceUnattendedServiceAccount
                 $TempItem = [PSCustomObject]@{
