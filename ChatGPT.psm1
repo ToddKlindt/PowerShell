@@ -38,6 +38,8 @@ function Format-ChatGPTConversation {
 
     #>
     param (
+        [cmdletbinding()]
+        [OutputType('TKchatGPT')]   
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
         [ValidateScript({ (Test-Path $_) -and ($_.EndsWith('.json')) })]
         [ArgumentCompleter({ param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameter)
@@ -61,7 +63,6 @@ function Format-ChatGPTConversation {
         $conversationFile = Get-Content -Raw -Path $filename | ConvertFrom-Json
         Write-Verbose "Found $($conversationFile.Count) ChatGPT Conversations" 
 
-        $Output = @()
         foreach ($conversation in $conversationFile) {
             $title = $conversation.title
             $id = $conversation.id
@@ -83,19 +84,16 @@ function Format-ChatGPTConversation {
                 $content_parts = $object.message.content.parts
                 $content = if ($content_parts) { $content_parts[0] } else { $null }
 
-                $mappingobject = [PSCustomObject]@{
+                [PSCustomObject]@{
+                    PSTypeName = "TKchatGPT"
                     title = $title
                     id = $id
                     create_time = $create_time
                     author = $author
                     content = $content
                 }
-                $Output += $mappingobject
             }
         }
-
-            # Write the output
-            $Output
     }   
 
     End {
