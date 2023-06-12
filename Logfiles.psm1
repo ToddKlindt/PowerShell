@@ -4,7 +4,7 @@ function Format-ShareGateLogFile {
     Formats a ShareGate log file in Excel format.
 
     .DESCRIPTION
-    This function opens a ShareGate log file in Excel format and formats it for readability. It adds a table to the first worksheet, formats the first column as "Date-Time", calculates the duration of the log file, and formats the duration as "[h]:mm:ss" in the last row. The function saves the changes to the Excel file and closes it.
+    This function opens a ShareGate log file in Excel format and formats it for readability. It adds a table to the first worksheet, formats the first column as "Date-Time", calculates the duration of the log file, and formats the duration as "[h]:mm:ss" in the last row. The function saves the changes to the Excel file and closes it. From the blog post at https://www.toddklindt.com/blog/Lists/Posts/Post.aspx?ID=895
 
     .PARAMETER Path
     The path to the Excel file to format. This parameter is mandatory.
