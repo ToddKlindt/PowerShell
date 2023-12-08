@@ -1,0 +1,59 @@
+<#
+.SYNOPSIS
+Expands a PowerShell one-liner into a properly formatted multi-line script.
+
+.DESCRIPTION
+The Expand-OneLiner function is designed to take a PowerShell one-liner as input and return a properly formatted multi-line script. 
+It expands common aliases, adjusts indentation for better readability, and handles various special characters to ensure the output is clear and easy to understand.
+
+.PARAMETER OneLiner
+The PowerShell one-liner that you want to expand. IMPORTANT: Ensure to surround the input with single quotes `'` to ensure that any `$` characters in the one-liner are passed correctly to the function. If you use double quotes `"`, PowerShell will attempt to evaluate any `$` characters as variables, which can lead to unexpected results.
+
+.EXAMPLE
+$formattedCode = Expand-OneLiner -OneLiner 'ls -r -fi *.lis | sort @{expression={$_.Name}},@{expression={$_.LastWriteTime};Descending=$true} | select Directory, Name, lastwritetime | Group-Object Name | %{$_.Group | Select -first 1}' 
+Write-Output $formattedCode
+
+This example takes a one-liner that lists files, sorts them, and groups them by name. The Expand-OneLiner function will return a formatted multi-line script with expanded aliases and proper indentation.
+
+.EXAMPLE
+$formattedCode = Expand-OneLiner -OneLiner 'Get-Process | ?{$_.CPU -gt 10} | select Name, CPU'
+Write-Output $formattedCode
+
+In this example, the one-liner retrieves processes where the CPU usage is greater than 10. Notice how the `$` character inside the script block `{}` is correctly passed to the function because the entire one-liner is surrounded by single quotes `'`.
+#>
+
+function Expand-OneLiner {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$OneLiner
+    )
+
+    # Get all aliases from the current session
+    $aliases = Get-Alias | 
+               Sort-Object { $_.Name.Length } -Descending |
+               ForEach-Object { 
+                   @{
+                       Alias = [regex]::Escape($_.Name)  # Escape special characters
+                       Definition = $_.Definition
+                   } 
+               }
+
+    # Expand other aliases in the one-liner
+    foreach ($alias in $aliases) {
+        # Ensure we're matching whole words by using the \b word boundary in the regex
+        # and not preceded by a '-' or '.' and not followed by a '-'
+        $OneLiner = $OneLiner -replace "(?<![-.])\b$($alias.Alias)\b(?!-)", $alias.Definition
+    }
+
+    # Replace % with ForEach-Object
+    $OneLiner = $OneLiner.Replace('%', 'ForEach-Object')
+
+    # Replace ? with Where-Object
+    $OneLiner = $OneLiner.Replace('?', 'Where-Object')
+
+    # Replace common separators with newlines and indentation
+    $formatted = $OneLiner -replace '\|', "`n    |" -replace '(?<![\}""])\;', "`n    ;" -replace '(?<![@=])\{', "`n    {" -replace '\}(?=\|)(?!\;)', "}`n"
+
+    # Return the formatted string
+    return $formatted
+}
